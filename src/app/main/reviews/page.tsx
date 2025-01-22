@@ -1,5 +1,4 @@
 'use client'
-import { motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
 
 interface Review {
@@ -10,53 +9,48 @@ interface Review {
   comment: string
 }
 
+const reviewMessages = [
+  'Enak bangett rekomen 100/100',
+  'Gila harus cobain yg pedes, nendang cuy wkakwkaw',
+  'enak banget ihhhh',
+  'tahu bulat palijng enak yg pernah gw cobain',
+  'enak bangett tiap puang sekolah selalu kesini',
+  'tahubulat yang sangat wow, keren deh pak dadang',
+]
+
+
 export default function ReviewsPage() {
   const [reviews, setReviews] = useState<Review[]>([])
+  const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-
-  const fetchRandomUser = async () => {
-    try {
-      const response = await fetch('https://randomuser.me/api/')
-      if (!response.ok) {
-        throw new Error(`Failed to fetch data: ${response.status} ${response.statusText}`)
-      }
-      const data = await response.json()
-      const user = data.results[0]
-
-      return {
-        id: user.login.uuid,
-        name: `${user.name.first} ${user.name.last}`,
-        photo: user.picture.large,
-        location: `${user.location.city}, ${user.location.country}`,
-        comment: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
-      }
-    } catch (err) {
-      console.error('Error fetching random user:', err)
-      setError('Failed to fetch user data. Please try again later.')
-      return null
-    }
-  }
 
   useEffect(() => {
     const fetchReviews = async () => {
       try {
-        const reviews = await Promise.all(
-          Array.from({ length: 5 }).map(() => fetchRandomUser())
-        )
-        setReviews(reviews.filter((review) => review !== null) as Review[])
+        const response = await fetch('https://randomuser.me/api/?results=6')
+        if (!response.ok) {
+          throw new Error('Failed to fetch reviews')
+        }
+
+        const data = await response.json()
+        const fetchedReviews = data.results.map((user: any, index: number) => ({
+          id: `${index}`,
+          name: `${user.name.first} ${user.name.last}`,
+          photo: user.picture.large,
+          location: `${user.location.city}, ${user.location.country}`,
+          comment: reviewMessages[Math.floor(Math.random() * reviewMessages.length)],
+        }))
+
+        setReviews([...fetchedReviews])
       } catch (err) {
-        console.error('Error fetching reviews:', err)
-        setError('Failed to load reviews. Please try again later.')
+        setError((err as Error).message)
+      } finally {
+        setLoading(false)
       }
     }
 
     fetchReviews()
   }, [])
-
-  const variants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
-  }
 
   return (
     <div className="min-h-screen flex flex-col overflow-hidden bg-black text-white">
@@ -65,19 +59,17 @@ export default function ReviewsPage() {
           Customer Reviews
         </h1>
 
+        {loading && <p className="font-poppins text-center mb-6">Loading reviews...</p>}
+
         {error && (
           <p className="font-poppins text-red-500 text-center mb-6">{error}</p>
         )}
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {reviews.map((review) => (
-            <motion.div
+            <div
               key={review.id}
               className="bg-[#1F1F1F] rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
-              variants={variants}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.2 }}
             >
               <img
                 src={review.photo}
@@ -96,9 +88,13 @@ export default function ReviewsPage() {
                   {review.comment}
                 </p>
               </div>
-            </motion.div>
+            </div>
           ))}
         </div>
+
+        {!loading && reviews.length === 0 && !error && (
+          <p className="text-center text-gray-400">No reviews available.</p>
+        )}
       </div>
     </div>
   )

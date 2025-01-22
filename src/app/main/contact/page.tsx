@@ -43,7 +43,7 @@ export default function ContactPage() {
       } else {
         setStatus('Failed to send message. Please try again.')
       }
-    } catch (error) {
+    } catch {
       setStatus('An error occurred. Please try again.')
     } finally {
       setIsSubmitting(false)
