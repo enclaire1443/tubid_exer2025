@@ -1,6 +1,7 @@
 'use client'
 import React from 'react'
 import { motion } from 'framer-motion'
+import Image from 'next/image'
 
 const menu = [
   {
@@ -25,7 +26,7 @@ const menu = [
     description: 'Tahu bulat with a cheesy twist.',
     price: 7000,
     image: '/images/tahu-bulat-2.jpg',
-    size: 'large'
+    size: 'medium'
   },
   {
     id: 4,
@@ -33,7 +34,7 @@ const menu = [
     description: 'Tahu bulat served with special sambal.',
     price: 6500,
     image: '/images/tahu-bulat-1.jpg',
-    size: 'tall'
+    size: 'small'
   },
   {
     id: 5,
@@ -71,33 +72,30 @@ export default function Page() {
             <motion.div
               key={item.id}
               className={`bg-[#1F1F1F] rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 ${
-                item.size === 'medium'
-                  ? 'sm:col-span-2'
-                  : item.size === 'large'
-                  ? 'lg:col-span-2 lg:row-span-2'
-                  : item.size === 'tall'
-                  ? 'lg:row-span-2'
-                  : ''
+                item.size === 'medium' ? 'sm:col-span-2'
+                : ''
               }`}
               variants={variants}
               initial="hidden"
               whileInView="visible"
-              viewport={{ once: true, amount: 0.2 }} 
+              viewport={{ once: true, amount: 0.2 }}
               whileHover={{
                 scale: 1.01,
                 transition: {
-                    duration: 0.7,
-                    ease: 'easeOut'
+                  duration: 0.7,
+                  ease: 'easeOut'
                 }
               }}
             >
-              <img
-                src={item.image}
-                alt={item.name}
-                className={`w-full ${
-                  item.size === 'large' ? 'h-96' : 'h-48'
-                } object-cover`}
-              />
+              <div className="relative w-full h-40">
+                <Image
+                  src={item.image}
+                  alt={item.name}
+                  layout="fill" 
+                  objectFit="cover" 
+                  className="rounded-lg"
+                />
+              </div>
               <div className="p-4">
                 <h2 className="font-poppins font-semibold text-xl mb-2">
                   {item.name}

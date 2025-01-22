@@ -1,5 +1,6 @@
 'use client'
 import { useEffect, useState } from 'react'
+import Image from 'next/image'
 
 interface Review {
   id: string
@@ -9,36 +10,41 @@ interface Review {
   comment: string
 }
 
-const reviewMessages = [
-  'Enak bangett rekomen 100/100',
-  'Gila harus cobain yg pedes, nendang cuy wkakwkaw',
-  'enak banget ihhhh',
-  'tahu bulat palijng enak yg pernah gw cobain',
-  'enak bangett tiap puang sekolah selalu kesini',
-  'tahubulat yang sangat wow, keren deh pak dadang',
-]
-
+interface APITypes {
+  name: { first: string; last: string }
+  picture: { large: string }
+  location: { city: string; country: string }
+}
 
 export default function ReviewsPage() {
   const [reviews, setReviews] = useState<Review[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
+  const comments = [
+    'ENAK BANGET REKOMEN 100%',
+    'makan disini bareng tmen temen, rasanya inget masa lalu',
+    'kayak tahu masakan mama hehe',
+    'KECE BANGET TAHU BULATNYAAAAA',
+    'eh suka banget, makan disini bareng keluarga',
+    'asli tahu bulat pak dadang TERBAIK'
+  ]
+
   useEffect(() => {
     const fetchReviews = async () => {
       try {
         const response = await fetch('https://randomuser.me/api/?results=6')
         if (!response.ok) {
-          throw new Error('Failed to fetch reviews')
+          throw new Error('fetch failed')
         }
 
         const data = await response.json()
-        const fetchedReviews = data.results.map((user: any, index: number) => ({
+        const fetchedReviews = data.results.map((user: APITypes, index: number) => ({
           id: `${index}`,
           name: `${user.name.first} ${user.name.last}`,
           photo: user.picture.large,
           location: `${user.location.city}, ${user.location.country}`,
-          comment: reviewMessages[Math.floor(Math.random() * reviewMessages.length)],
+          comment: comments[Math.floor(Math.random() * comments.length)] // Randomly select a comment
         }))
 
         setReviews([...fetchedReviews])
@@ -59,7 +65,7 @@ export default function ReviewsPage() {
           Customer Reviews
         </h1>
 
-        {loading && <p className="font-poppins text-center mb-6">Loading reviews...</p>}
+        {loading && <p className="font-poppins text-center mb-6">Loading...</p>}
 
         {error && (
           <p className="font-poppins text-red-500 text-center mb-6">{error}</p>
@@ -71,9 +77,11 @@ export default function ReviewsPage() {
               key={review.id}
               className="bg-[#1F1F1F] rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
             >
-              <img
+              <Image
                 src={review.photo}
                 alt={review.name}
+                width={300}
+                height={300}
                 className="w-full h-48 object-cover"
               />
 
