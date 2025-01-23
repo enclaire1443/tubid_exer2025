@@ -23,6 +23,7 @@ const particleVariants = {
     }
   })
 }
+export const dynamic = 'force-dynamic' 
 
 export default function Page() {
   const [particles, setParticles] = useState<{ top: string; left: string }[]>([])
