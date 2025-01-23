@@ -55,7 +55,7 @@ export default function Page() {
     }
 
     fetchReviews()
-  }, [comments])
+  }, [])
 
   return (
     <div className="min-h-screen flex flex-col overflow-hidden bg-black text-white">
