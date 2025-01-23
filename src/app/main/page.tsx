@@ -1,9 +1,18 @@
 'use client'
-import React from 'react'
+import React, { useState } from 'react'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
+import Order from './order/page' 
+interface MenuItem {
+  id: number
+  name: string
+  description: string
+  price: number
+  image: string
+  size: string
+}
 
-const menu = [
+const menu: MenuItem[] = [
   {
     id: 1,
     name: 'Tahu Bulat Original',
@@ -59,7 +68,18 @@ const variants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
 }
 
-export default function Page() {
+export default function page() {
+  const [expandedId, setExpandedId] = useState<number | null>(null) 
+
+  const handleCardClick = (id: number) => {
+    setExpandedId(id) 
+  }
+
+  const handleCloseOrder = () => {
+    setExpandedId(null)
+  }
+
+  const selectedItem = menu.find((item) => item.id === expandedId) 
   return (
     <div className="min-h-screen flex flex-col overflow-hidden bg-black text-white z-0 top-20 relative">
       <div className="container mx-auto p-6">
@@ -72,8 +92,7 @@ export default function Page() {
             <motion.div
               key={item.id}
               className={`bg-[#1F1F1F] rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 ${
-                item.size === 'medium' ? 'sm:col-span-2'
-                : ''
+                item.size === 'medium' ? 'sm:col-span-2' : ''
               }`}
               variants={variants}
               initial="hidden"
@@ -86,13 +105,15 @@ export default function Page() {
                   ease: 'easeOut'
                 }
               }}
+              onClick={() => handleCardClick(item.id)}
+              style={{ cursor: 'pointer' }}
             >
               <div className="relative w-full h-40">
                 <Image
                   src={item.image}
                   alt={item.name}
-                  layout="fill" 
-                  objectFit="cover" 
+                  layout="fill"
+                  objectFit="cover"
                   className="rounded-lg"
                 />
               </div>
@@ -111,6 +132,10 @@ export default function Page() {
           ))}
         </div>
       </div>
+
+      {expandedId && selectedItem && (
+        <Order item={selectedItem} onClose={handleCloseOrder} />
+      )}
     </div>
   )
 }

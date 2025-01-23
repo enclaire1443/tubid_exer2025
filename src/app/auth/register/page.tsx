@@ -2,6 +2,8 @@
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
+import { supabase } from '@/lib/supabaseClient'
+import { useRouter } from 'next/navigation'
 
 const variants = {
   hidden: { opacity: 0, y: 20 },
@@ -22,8 +24,13 @@ const particleVariants = {
   })
 }
 
-export default function RegisterPage() {
+export default function page() {
   const [particles, setParticles] = useState<{ top: string; left: string }[]>([])
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
+  const router = useRouter()
 
   useEffect(() => {
     const generatedParticles = Array.from({ length: 30 }).map(() => ({
@@ -32,6 +39,27 @@ export default function RegisterPage() {
     }))
     setParticles(generatedParticles)
   }, [])
+
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setError('')
+
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: {
+          full_name: name
+        }
+      }
+    })
+
+    if (error) {
+      setError(error.message)
+    } else {
+      router.push('/auth/login')
+    }
+  }
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-black text-white overflow-hidden relative">
@@ -60,48 +88,68 @@ export default function RegisterPage() {
           Register
         </h1>
 
-        <div className="mb-4">
-          <label htmlFor="name" className="font-poppins font-medium text-sm">
-            Full Name
-          </label>
-          <input
-            type="text"
-            id="name"
-            className="w-full p-2 mt-1 bg-[#2C2C2C] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#FF6B6B]"
-            placeholder="Enter your full name"
-          />
-        </div>
+        {error && (
+          <div className="mb-4 p-2 bg-red-500 text-white text-sm rounded-lg">
+            {error}
+          </div>
+        )}
 
-        <div className="mb-4">
-          <label htmlFor="email" className="font-poppins font-medium text-sm">
-            Email
-          </label>
-          <input
-            type="email"
-            id="email"
-            className="w-full p-2 mt-1 bg-[#2C2C2C] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#FF6B6B]"
-            placeholder="Enter your email"
-          />
-        </div>
+        <form onSubmit={handleRegister}>
+          <div className="mb-4">
+            <label htmlFor="name" className="font-poppins font-medium text-sm">
+              Full Name
+            </label>
+            <input
+              type="text"
+              id="name"
+              className="w-full p-2 mt-1 bg-[#2C2C2C] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#FF6B6B]"
+              placeholder="Enter your full name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
+          </div>
 
-        <div className="mb-6">
-          <label htmlFor="password" className="font-poppins font-medium text-sm">
-            Password
-          </label>
-          <input
-            type="password"
-            id="password"
-            className="w-full p-2 mt-1 bg-[#2C2C2C] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#FF6B6B]"
-            placeholder="Enter your password"
-          />
-        </div>
+          <div className="mb-4">
+            <label htmlFor="email" className="font-poppins font-medium text-sm">
+              Email
+            </label>
+            <input
+              type="email"
+              id="email"
+              className="w-full p-2 mt-1 bg-[#2C2C2C] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#FF6B6B]"
+              placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
 
-        <button className="w-full bg-[#FF6B6B] text-white font-poppins font-semibold py-2 rounded-lg hover:bg-[#FF5A5A] transition-colors duration-300">
-          Register
-        </button>
+          <div className="mb-6">
+            <label htmlFor="password" className="font-poppins font-medium text-sm">
+              Password
+            </label>
+            <input
+              type="password"
+              id="password"
+              className="w-full p-2 mt-1 bg-[#2C2C2C] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#FF6B6B]"
+              placeholder="Enter your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+
+          <button
+            type="submit"
+            className="w-full bg-[#FF6B6B] text-white font-poppins font-semibold py-2 rounded-lg hover:bg-[#FF5A5A] transition-colors duration-300"
+          >
+            Register
+          </button>
+        </form>
 
         <p className="font-poppins text-sm text-center mt-4">
-          Already have an account?{' '}
+          Already have an account{' '}
           <Link href="/auth/login" className="text-[#FF6B6B] hover:underline">
             Login here
           </Link>

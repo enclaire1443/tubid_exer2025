@@ -3,7 +3,7 @@ import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 
-export default function Page() {
+export default function page() {
   const [particles, setParticles] = useState<{ top: string; left: string }[]>([])
 
   useEffect(() => {
@@ -89,15 +89,6 @@ export default function Page() {
               className="bg-white text-[#FF6B6B] font-poppins font-semibold text-lg py-3 px-8 rounded-full shadow-lg hover:bg-gray-100 transition-colors duration-300"
             >
               Login with Account
-            </Link>
-          </motion.div>
-
-          <motion.div variants={itemVariants}>
-            <Link
-              href="/main"
-              className="bg-transparent border-2 border-white text-white font-poppins font-semibold text-lg py-3 px-8 rounded-full shadow-lg hover:bg-white hover:text-[#FF6B6B] transition-colors duration-300"
-            >
-              Login as Guest
             </Link>
           </motion.div>
         </motion.div>

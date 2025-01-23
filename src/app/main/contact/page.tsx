@@ -7,7 +7,7 @@ const fadeInVariants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
 }
 
-export default function ContactPage() {
+export default function page() {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [message, setMessage] = useState('')
@@ -52,7 +52,7 @@ export default function ContactPage() {
 
   return (
     <div className="min-h-screen flex flex-col overflow-hidden bg-black text-white">
-      <div className="container mx-auto p-6 pt-24">
+      <div className="w-full mx-auto p-6 pt-24">
         <h1 className="font-poppins font-extrabold text-4xl md:text-6xl text-center mb-8">
           Contact Us
         </h1>

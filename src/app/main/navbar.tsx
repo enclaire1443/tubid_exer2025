@@ -33,10 +33,9 @@ export default function Navbar() {
             </Link>
           ))}
         </div>
-
-        <button className="font-poppins font-semibold text-lg text-white hover:text-[#FF6B6B] transition-colors duration-300">
+        <Link href="/" className="font-poppins font-semibold text-lg text-white hover:text-[#FF6B6B] transition-colors duration-300">
           Logout
-        </button>
+        </Link>
       </div>
     </nav>
   )

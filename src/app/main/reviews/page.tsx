@@ -9,7 +9,6 @@ interface Review {
   location: string
   comment: string
 }
-
 interface APITypes {
   name: { first: string; last: string }
   picture: { large: string }
@@ -44,7 +43,7 @@ export default function ReviewsPage() {
           name: `${user.name.first} ${user.name.last}`,
           photo: user.picture.large,
           location: `${user.location.city}, ${user.location.country}`,
-          comment: comments[Math.floor(Math.random() * comments.length)] // Randomly select a comment
+          comment: comments[Math.floor(Math.random() * comments.length)] 
         }))
 
         setReviews([...fetchedReviews])

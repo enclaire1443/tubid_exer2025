@@ -2,6 +2,8 @@
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
+import { supabase } from '@/lib/supabaseClient'
+import { useRouter } from 'next/navigation'
 
 const variants = {
   hidden: { opacity: 0, y: 20 },
@@ -22,8 +24,12 @@ const particleVariants = {
   })
 }
 
-export default function LoginPage() {
+export default function page() {
   const [particles, setParticles] = useState<{ top: string; left: string }[]>([])
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
+  const router = useRouter()
 
   useEffect(() => {
     const generatedParticles = Array.from({ length: 30 }).map(() => ({
@@ -32,6 +38,21 @@ export default function LoginPage() {
     }))
     setParticles(generatedParticles)
   }, [])
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setError('')
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password
+    })
+    if (error) {
+      setError(error.message)
+    } else {
+      console.log('Signed in successfully:', data)
+      router.push('/main')
+    }
+  }
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-black text-white overflow-hidden relative">
@@ -49,7 +70,6 @@ export default function LoginPage() {
           custom={i}
         />
       ))}
-
       <motion.div
         className="w-full max-w-md p-8 bg-[#1F1F1F] rounded-lg shadow-lg relative z-10"
         variants={variants}
@@ -59,35 +79,47 @@ export default function LoginPage() {
         <h1 className="font-poppins font-extrabold text-3xl mb-6 text-center">
           Login
         </h1>
-
-        <div className="mb-4">
-          <label htmlFor="email" className="font-poppins font-medium text-sm">
-            Email
-          </label>
-          <input
-            type="email"
-            id="email"
-            className="w-full p-2 mt-1 bg-[#2C2C2C] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#FF6B6B]"
-            placeholder="Enter your email"
-          />
-        </div>
-
-        <div className="mb-6">
-          <label htmlFor="password" className="font-poppins font-medium text-sm">
-            Password
-          </label>
-          <input
-            type="password"
-            id="password"
-            className="w-full p-2 mt-1 bg-[#2C2C2C] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#FF6B6B]"
-            placeholder="Enter your password"
-          />
-        </div>
-
-        <button className="w-full bg-[#FF6B6B] text-white font-poppins font-semibold py-2 rounded-lg hover:bg-[#FF5A5A] transition-colors duration-300">
-          Login
-        </button>
-
+        {error && (
+          <div className="mb-4 p-2 bg-red-500 text-white text-sm rounded-lg">
+            {error}
+          </div>
+        )}
+        <form onSubmit={handleLogin}>
+          <div className="mb-4">
+            <label htmlFor="email" className="font-poppins font-medium text-sm">
+              Email
+            </label>
+            <input
+              type="email"
+              id="email"
+              className="w-full p-2 mt-1 bg-[#2C2C2C] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#FF6B6B]"
+              placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div className="mb-6">
+            <label htmlFor="password" className="font-poppins font-medium text-sm">
+              Password
+            </label>
+            <input
+              type="password"
+              id="password"
+              className="w-full p-2 mt-1 bg-[#2C2C2C] rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#FF6B6B]"
+              placeholder="Enter your password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          <button
+            type="submit"
+            className="w-full bg-[#FF6B6B] text-white font-poppins font-semibold py-2 rounded-lg hover:bg-[#FF5A5A] transition-colors duration-300"
+          >
+            Login
+          </button>
+        </form>
         <p className="font-poppins text-sm text-center mt-4">
           Don&apos;t have an account?{' '}
           <Link href="/auth/register" className="text-[#FF6B6B] hover:underline">
