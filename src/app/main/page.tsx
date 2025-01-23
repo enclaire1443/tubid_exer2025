@@ -2,7 +2,7 @@
 import React, { useState } from 'react'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
-import Order from './order/page' 
+import Order from './components/Order' 
 interface MenuItem {
   id: number
   name: string
