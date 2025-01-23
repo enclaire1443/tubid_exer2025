@@ -15,7 +15,7 @@ interface APITypes {
   location: { city: string; country: string }
 }
 
-export default function ReviewsPage() {
+export default function Page() {
   const [reviews, setReviews] = useState<Review[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -55,7 +55,7 @@ export default function ReviewsPage() {
     }
 
     fetchReviews()
-  }, [])
+  }, [comments])
 
   return (
     <div className="min-h-screen flex flex-col overflow-hidden bg-black text-white">

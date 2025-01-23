@@ -24,7 +24,7 @@ const particleVariants = {
   })
 }
 
-export default function page() {
+export default function Page() {
   const [particles, setParticles] = useState<{ top: string; left: string }[]>([])
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')

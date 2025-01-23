@@ -3,7 +3,7 @@ import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 
-export default function page() {
+export default function Page() {
   const [particles, setParticles] = useState<{ top: string; left: string }[]>([])
 
   useEffect(() => {

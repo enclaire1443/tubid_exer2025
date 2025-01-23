@@ -68,7 +68,7 @@ const variants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
 }
 
-export default function page() {
+export default function Page() {
   const [expandedId, setExpandedId] = useState<number | null>(null) 
 
   const handleCardClick = (id: number) => {

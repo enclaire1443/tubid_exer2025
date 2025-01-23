@@ -7,7 +7,7 @@ const fadeInVariants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
 }
 
-export default function page() {
+export default function Page() {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [message, setMessage] = useState('')
