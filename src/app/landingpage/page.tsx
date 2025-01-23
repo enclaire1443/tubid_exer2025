@@ -1,7 +1,7 @@
 'use client'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react' // comment for pushing
 
 export default function Page() {
   const [particles, setParticles] = useState<{ top: string; left: string }[]>([])
