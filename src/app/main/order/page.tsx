@@ -16,7 +16,7 @@ interface OrderProps {
   onClose: () => void
 }
 
-export default function page({ item, onClose }: OrderProps) {
+export default function Page({ item, onClose }: OrderProps) {
   return (
     <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4">
       <div className="bg-[#1F1F1F] rounded-lg overflow-hidden shadow-lg w-full max-w-2xl relative">
